@@ -1,0 +1,10 @@
+frames 1
+width 4
+height 4
+color red
+ __
+/  \
+|:(|
+\__/
+end
+eof
