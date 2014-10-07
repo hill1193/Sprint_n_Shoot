@@ -7,12 +7,12 @@
 enum PowerupType {
 	INVINCIBILITY,
 	RAPID_FIRE,
+	NO_POWER,
 };
 
 class Hero : public Object {
 
  private:
-  int fire_slowdown;
   int fire_countdown;
   PowerupType power;
   int power_countdown;

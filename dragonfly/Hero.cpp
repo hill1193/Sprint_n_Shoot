@@ -15,6 +15,11 @@
 #include "GameOver.h"
 #include "Hero.h"
 
+#define FLOOR_Y world_manager.getBoundary().getVertical()-8  // Y-coordinate of floor
+#define GRAVITY 0.5  // Strength of gravity (i.e. delta y velocity per step in air)
+#define FIRE_RATE 45 // Normal delay after shooting
+#define RAPID_FIRE_RATE 10 // Delay after shooting with RAPID_FIRE power
+
 Hero::Hero() {
 
   // Link to "hero" sprite.
@@ -107,13 +112,17 @@ void Hero::kbd(EventKeyboard *p_keyboard_event) {
 }
 
 void Hero::hit(EventCollision *p_c) {
-	if ((p_c
+	if (power == INVINCIBILITY) return;  // Ignore all collisions when invincible
+
+	// If wall or enemy, die
+	// If powerup, set power state and countdown
 }
 
 // Move up or down.
 void Hero::jump() {
   WorldManager &world_manager = WorldManager::getInstance();
-  setYVelocity(5);
+  if (pos.getY() == FLOOR_Y) // Have to be on the ground to jump
+	setYVelocity(-5);
 	
 }
 
@@ -121,17 +130,27 @@ void Hero::jump() {
 void Hero::fire() {
   if (fire_countdown > 0)
     return;
-  fire_countdown = fire_slowdown;
+  if (power != RAPID_FIRE)
+    fire_countdown = FIRE_RATE;
+  else fire_countdown = RAPID_FIRE_RATE;
   new Bullet(getPosition());
 }
 
-// Decrease fire restriction and simulate gravity
+// Decrease fire/power timers and simulate gravity
 void Hero::step() {
   fire_countdown--;
+  power_countdown--;
+  
   if (fire_countdown < 0)
     fire_countdown = 0;
-  while(getYVelocity() > 0)
-    setYVelocity(getYVelocity() - 0.5);
+  if (power_countdown < 0) {
+    power_countdown = 0;
+	power = NO_POWER;
+  }	
+  
+  if (pos.getY() != FLOOR_Y)
+	setYVelocity(getYVelocity() + GRAVITY);
+  else setYVelocity(0);
 }
 
 void Hero::duck() {
