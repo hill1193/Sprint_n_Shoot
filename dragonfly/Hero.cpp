@@ -73,6 +73,12 @@ int Hero::eventHandler(Event *p_e) {
     step();
     return 1;
   }
+  
+  if (p_e->getType() == DF_COLLISION_EVENT) {
+	EventCollision *p_collision_event = static_cast <EventCollision *> (p_e);
+	hit(p_collision_event);
+	return 1;
+  }
  
   // If get here, have ignored this event.
   return 0;
@@ -98,6 +104,10 @@ void Hero::kbd(EventKeyboard *p_keyboard_event) {
   };
 
   return;
+}
+
+void Hero::hit(EventCollision *p_c) {
+	if ((p_c
 }
 
 // Move up or down.
