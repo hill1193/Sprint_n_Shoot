@@ -29,6 +29,8 @@ Powerup::Powerup() {
 		setTransparency();
     }
 	
+	setType("Powerup");
+	
 	setXVelocity(-1);
 	moveToStart();
 }
@@ -54,9 +56,9 @@ void Powerup::moveToStart() {
 
   // y is in vertical range.
   if (random() % 2 == 1)
-	temp_pos.setY(FLOOR_Y + 2);
+	temp_pos.setY(FLOOR_Y - 2);
   else
-    temp_pos.setY(FLOOR_Y - 3);
+    temp_pos.setY(FLOOR_Y);
 
   // If collision, move right slightly until empty space.
   ObjectList collision_list = world_manager.isCollision(this, temp_pos);
@@ -66,4 +68,20 @@ void Powerup::moveToStart() {
   }
 
   world_manager.moveObject(this, temp_pos);
+}
+
+int Powerup::eventHandler(Event *p_e) {
+	if (p_e->getType() == DF_COLLISION_EVENT) {
+		EventCollision *p_collision_event = static_cast <EventCollision *> (p_e);
+		hit(p_collision_event);
+		return 1;
+	}
+}
+
+void Powerup::hit(EventCollision *p_c) {
+	if ((p_c->getObject1()->getType() == "Hero") ||
+		(p_c->getObject2()->getType() == "Hero")) {
+			WorldManager &world_manager = WorldManager::getInstance();
+			world_manager.markForDelete(this);
+	}
 }

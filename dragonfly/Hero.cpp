@@ -14,6 +14,7 @@
 #include "Bullet.h"
 #include "GameOver.h"
 #include "Hero.h"
+#include "Powerup.h"
 
 using std::string;
 
@@ -150,7 +151,22 @@ void Hero::hit(EventCollision *p_c) {
 	if (power == INVINCIBILITY) return;  // Ignore all collisions when invincible
 
 	// If wall or enemy, die
-	// If powerup, set power state and countdown
+	
+	if ((p_c->getObject1()->getType() == "Powerup") ||
+		(p_c->getObject2()->getType() == "Powerup")) {
+			if (power != NO_POWER) return;
+			
+			else {
+				if (p_c->getObject1()->getType() == "Powerup") {
+					this->power = static_cast <Powerup *> (p_c->getObject1())->getPower();
+					power_countdown = POWER_DURATION;
+				}
+				if (p_c->getObject2()->getType() == "Powerup") {
+					this->power = static_cast <Powerup *> (p_c->getObject2())->getPower();
+					power_countdown = POWER_DURATION;
+				}
+			}
+	}
 }
 
 // Move up or down.

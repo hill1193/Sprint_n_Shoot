@@ -38,6 +38,7 @@ class Hero : public Object {
   Hero(string sprite);
   ~Hero();
   int eventHandler(Event *p_e);
+  
 };
 
 #endif
