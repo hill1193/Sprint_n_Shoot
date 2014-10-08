@@ -3,6 +3,13 @@
 
 #include "EventKeyboard.h"
 #include "Object.h"
+#include "EventCollision.h"
+
+#define FLOOR_Y world_manager.getBoundary().getVertical()-8  // Y-coordinate of floor
+#define GRAVITY 0.05  // Strength of gravity (i.e. delta y velocity per step in air)
+#define FIRE_RATE 45 // Normal delay after shooting
+#define RAPID_FIRE_RATE 10 // Delay after shooting with RAPID_FIRE power
+#define NUMBER_POWERS 2 // Number of different powerup pbjects
 
 enum PowerupType {
 	INVINCIBILITY,
@@ -25,6 +32,7 @@ class Hero : public Object {
 
  public:
   Hero();
+  Hero(string sprite);
   ~Hero();
   int eventHandler(Event *p_e);
 };

@@ -1,5 +1,5 @@
 //
-// Enemy.cpp
+// Wall.cpp
 //
  
 #include <stdlib.h>		// for random()
@@ -14,24 +14,24 @@
  
 // Game includes.
 #include "Points.h"
-#include "Enemy.h"
+#include "Wall.h"
 #include "Hero.h"
 
-Enemy::Enemy() {
+Wall::Wall() {
   LogManager &log_manager = LogManager::getInstance();
   ResourceManager &resource_manager = ResourceManager::getInstance();
 
-  // Setup "enemy" sprite.
+  // Setup "wall" sprite.
   Sprite *p_temp_sprite;
-	p_temp_sprite = resource_manager.getSprite("enemy");
+	p_temp_sprite = resource_manager.getSprite("wall");
 	setXVelocity(-1.00);
 	// Set object type.
-	setType("Enemy");
+	setType("Wall");
 	
 
   if (!p_temp_sprite) {
-    log_manager.writeLog("Enemy::Enemy(): Warning! Sprite '%s' not found",
-			 "enemy");
+    log_manager.writeLog("Wall::Wall(): Warning! Sprite '%s' not found",
+			 "wall");
   } else {
     setSprite(p_temp_sprite);
     setSpriteSlowdown(4);		
@@ -42,7 +42,7 @@ Enemy::Enemy() {
 
 }
 
-Enemy::~Enemy() {
+Wall::~Wall() {
   // Send "view" event with points to interested ViewObjects.
   // Add 10 points.
   EventView ev(POINTS_STRING, 10, true);
@@ -52,7 +52,7 @@ Enemy::~Enemy() {
 
 // Handle event.
 // Return 0 if ignored, else 1.
-int Enemy::eventHandler(Event *p_e) {
+int Wall::eventHandler(Event *p_e) {
 
   if (p_e->getType() == DF_OUT_EVENT) {
     out();
@@ -71,7 +71,7 @@ int Enemy::eventHandler(Event *p_e) {
 }
 
 // If moved off left edge, move back to far right.
-void Enemy::out() {
+void Wall::out() {
 
   // If haven't moved off left edge, then nothing to do.
   if (getPosition().getX() >= 0)
@@ -80,49 +80,41 @@ void Enemy::out() {
   // Otherwise, move back to far right.
   moveToStart();
 
-  // Spawn new Enemy to make the game get harder.
-  new Enemy;
-
 }
 
-// If enemy and player collide, mark both for deletion.
-void Enemy::hit(EventCollision *p_c) {
+// If wall and player collide, mark both for deletion.
+void Wall::hit(EventCollision *p_c) {
 
-  // If Enemy on Enemy, ignore.
-  if ((p_c -> getObject1() -> getType() == "Enemy") &&
-      (p_c -> getObject2() -> getType() == "Enemy"))
+  // If Wall on Wall, ignore.
+  if ((p_c -> getObject1() -> getType() == "Wall") &&
+      (p_c -> getObject2() -> getType() == "Wall"))
     return;
 	
-  // If Fast on Enemy, Fast destroys Enemy
-  if ((p_c -> getObject1() -> getType() == "Fast") &&
-      (p_c -> getObject2() -> getType() == "Enemy")) {
-		WorldManager &world_manager = WorldManager::getInstance();
-		world_manager.markForDelete(p_c -> getObject2());
-		}
-  if ((p_c -> getObject1() -> getType() == "Enemy") &&
-      (p_c -> getObject2() -> getType() == "Fast")) {
-		WorldManager &world_manager = WorldManager::getInstance();
-		world_manager.markForDelete(p_c -> getObject1());
-		}
 
   // If Bullet ...
-  if ((p_c -> getObject1() -> getType() == "Bullet") ||
-      (p_c -> getObject2() -> getType() == "Bullet")) {
-
+  if (p_c -> getObject1() -> getType() == "Bullet") {
+    WorldManager &world_manager = WorldManager::getInstance();
+    world_manager.markForDelete(p_c -> getObject1());
+	}
+  if (p_c -> getObject2() -> getType() == "Bullet") {
+    WorldManager &world_manager = WorldManager::getInstance();
+    world_manager.markForDelete(p_c -> getObject2());
   }
 
   // If Hero, mark both objects for destruction.
-  if (((p_c -> getObject1() -> getType()) == "Hero") || 
-      ((p_c -> getObject2() -> getType()) == "Hero")) {
-    WorldManager &world_manager = WorldManager::getInstance();
+  if ((p_c -> getObject1() -> getType()) == "Hero") {
+	WorldManager &world_manager = WorldManager::getInstance();
     world_manager.markForDelete(p_c -> getObject1());
+	}
+  if ((p_c -> getObject2() -> getType()) == "Hero") {
+    WorldManager &world_manager = WorldManager::getInstance();
     world_manager.markForDelete(p_c -> getObject2());
   }
 
 }
 
-// Move enemy to starting location on right side of screen.
-void Enemy::moveToStart() {
+// Move wall to starting location on right side of screen.
+void Wall::moveToStart() {
   WorldManager &world_manager = WorldManager::getInstance();
   Position temp_pos;
 
@@ -134,7 +126,10 @@ void Enemy::moveToStart() {
   temp_pos.setX(world_horiz + random()%world_horiz + 3);
 
   // y is in vertical range.
-  temp_pos.setY(random()%(world_vert-4) + 4);
+  if (random() % 2 == 1)
+	temp_pos.setY(FLOOR_Y + 2);
+  else
+    temp_pos.setY(FLOOR_Y - 3);
 
   // If collision, move right slightly until empty space.
   ObjectList collision_list = world_manager.isCollision(this, temp_pos);

@@ -15,10 +15,9 @@
 #include "GameOver.h"
 #include "Hero.h"
 
-#define FLOOR_Y world_manager.getBoundary().getVertical()-8  // Y-coordinate of floor
-#define GRAVITY 0.5  // Strength of gravity (i.e. delta y velocity per step in air)
-#define FIRE_RATE 45 // Normal delay after shooting
-#define RAPID_FIRE_RATE 10 // Delay after shooting with RAPID_FIRE power
+using std::string;
+
+WorldManager &world_manager = WorldManager::getInstance();
 
 Hero::Hero() {
 
@@ -26,7 +25,9 @@ Hero::Hero() {
   ResourceManager &resource_manager = ResourceManager::getInstance();
   LogManager &log_manager = LogManager::getInstance();
   Sprite *p_temp_sprite;
+  Sprite *duck_sprite;
   p_temp_sprite = resource_manager.getSprite("hero");
+  duck_sprite = resource_manager.getSprite("duck");
   if (!p_temp_sprite) {
     log_manager.writeLog("Hero::Hero(): Warning! Sprite '%s' not found", "hero");
   } else {
@@ -49,14 +50,48 @@ Hero::Hero() {
 
   // Set starting location.
   WorldManager &world_manager = WorldManager::getInstance();
-  Position pos(7, world_manager.getBoundary().getVertical()/2);
+  Position pos(7, FLOOR_Y);
   setPosition(pos);
 
   // Set firing variables.
-  fire_slowdown = 15;
-  fire_countdown = fire_slowdown;
+  fire_countdown = 0;
 }
 
+Hero::Hero(string sprite) {
+
+  // Link to "hero" sprite.
+  ResourceManager &resource_manager = ResourceManager::getInstance();
+  LogManager &log_manager = LogManager::getInstance();
+  Sprite *p_temp_sprite;
+  p_temp_sprite = resource_manager.getSprite(sprite);
+  if (!p_temp_sprite) {
+    log_manager.writeLog("Hero::Hero(): Warning! Sprite '%s' not found", "hero");
+  } else {
+    setSprite(p_temp_sprite);
+	setSpriteSlowdown(3);
+	setTransparency();
+  }
+
+  // Player controls hero, so register with keyboard.
+  registerInterest(DF_KEYBOARD_EVENT);
+
+  // Need to update fire rate control each step.
+  registerInterest(DF_STEP_EVENT);
+
+  // Set object type.
+  setType("Hero");
+  
+  // Set object ID.
+  setId(5);
+
+  // Set starting location.
+  WorldManager &world_manager = WorldManager::getInstance();
+  Position pos(7, FLOOR_Y);
+  setPosition(pos);
+
+  // Set firing variables.
+  fire_countdown = 0;
+}
 Hero::~Hero() {
 
   // Create GameOver object.
@@ -120,9 +155,16 @@ void Hero::hit(EventCollision *p_c) {
 
 // Move up or down.
 void Hero::jump() {
+  int timer = 0;
   WorldManager &world_manager = WorldManager::getInstance();
-  if (pos.getY() == FLOOR_Y) // Have to be on the ground to jump
-	setYVelocity(-5);
+  if (getPosition().getY() == FLOOR_Y) { // Have to be on the ground to jump
+	while(timer < 30) {
+		setPosition(Position(getPosition().getX(), FLOOR_Y - 5));
+		timer++;
+		}
+	if(timer == 30)
+		timer = 0;
+	}
 	
 }
 
@@ -148,11 +190,26 @@ void Hero::step() {
 	power = NO_POWER;
   }	
   
-  if (pos.getY() != FLOOR_Y)
+   if (this->getPosition().getY() != FLOOR_Y)
 	setYVelocity(getYVelocity() + GRAVITY);
   else setYVelocity(0);
+  
+    if(this->getPosition().getY() > FLOOR_Y) {
+		Position temp_pos = getPosition();
+		temp_pos.setY(FLOOR_Y);
+		setPosition(temp_pos);
+		}
 }
 
 void Hero::duck() {
-
+  WorldManager &world_manager = WorldManager::getInstance();
+  world_manager.markForDelete(this);
+  new Hero("duck");
+  int duck_timer = 15;
+  while(duck_timer > 0) {
+    duck_timer--;
+	}
+  world_manager.markForDelete(this);
+  new Hero;
 }
+
