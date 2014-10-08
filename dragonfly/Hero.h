@@ -5,6 +5,9 @@
 #define __HERO_H__
 
 #include "EventKeyboard.h"
+#ifndef __HERO_H__
+#define __HERO_H__
+
 #include "Object.h"
 #include "EventCollision.h"
 
@@ -35,10 +38,8 @@ class Hero : public Object {
 
  public:
   Hero();
-  Hero(string sprite);
   ~Hero();
   int eventHandler(Event *p_e);
   
 };
-
 #endif

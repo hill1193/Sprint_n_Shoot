@@ -68,6 +68,8 @@ void loadResources(void) {
 void populateWorld(void) {
  
 	new Hero;
+	//new Enemy;
+	new Wall;
 	new Enemy;
 	new Powerup;
 	

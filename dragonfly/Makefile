@@ -28,7 +28,11 @@ GAMESRC= \
          Points.cpp \
 		 Enemy.cpp \
 		 Wall.cpp \
+<<<<<<< HEAD
+		 Duck.cpp \
+=======
 		 Powerup.cpp \
+>>>>>>> origin/dev
 
 GAME= game.cpp
 EXECUTABLE= game		
@@ -50,6 +54,7 @@ depend:
 # DO NOT DELETE
 
 Bullet.o: Bullet.h Enemy.h
+Duck.o: Bullet.h GameOver.h Duck.h Hero.h
 Enemy.o: /usr/include/stdlib.h /usr/include/features.h
 Enemy.o: /usr/include/sys/cdefs.h /usr/include/bits/wordsize.h
 Enemy.o: /usr/include/gnu/stubs.h /usr/include/gnu/stubs-64.h
@@ -63,7 +68,7 @@ Enemy.o: /usr/include/alloca.h Points.h Enemy.h Hero.h
 game.o: GameStart.h Star.h Hero.h Enemy.h
 GameOver.o: GameOver.h GameStart.h
 GameStart.o: GameStart.h Hero.h Points.h
-Hero.o: Bullet.h GameOver.h Hero.h
+Hero.o: Bullet.h GameOver.h Hero.h Duck.h
 Points.o: Points.h
 Powerup.o: Powerup.h Hero.h /usr/include/stdlib.h /usr/include/features.h
 Powerup.o: /usr/include/sys/cdefs.h /usr/include/bits/wordsize.h
