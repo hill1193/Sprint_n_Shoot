@@ -68,6 +68,7 @@ void populateWorld(void) {
  
 	new Hero;
 	new Enemy;
+	new Powerup;
 	
   // Create GameStart object.
 	 new GameStart();

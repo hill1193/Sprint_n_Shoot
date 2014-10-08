@@ -33,3 +33,30 @@ void Powerup::setPowerup(PowerupType new_power) {
 PowerupType Powerup::getPowerup() const {
 	return this->power;
 }
+
+void Wall::moveToStart() {
+  WorldManager &world_manager = WorldManager::getInstance();
+  Position temp_pos;
+
+  // Get world boundaries.
+  int world_horiz = world_manager.getBoundary().getHorizontal();
+  int world_vert = world_manager.getBoundary().getVertical();
+
+  // x is off right side of screen.
+  temp_pos.setX(world_horiz + random()%world_horiz + 3);
+
+  // y is in vertical range.
+  if (random() % 2 == 1)
+	temp_pos.setY(FLOOR_Y + 2);
+  else
+    temp_pos.setY(FLOOR_Y - 3);
+
+  // If collision, move right slightly until empty space.
+  ObjectList collision_list = world_manager.isCollision(this, temp_pos);
+  while (!collision_list.isEmpty()) {
+    temp_pos.setX(temp_pos.getX()+1);
+    collision_list = world_manager.isCollision(this, temp_pos);
+  }
+
+  world_manager.moveObject(this, temp_pos);
+}
