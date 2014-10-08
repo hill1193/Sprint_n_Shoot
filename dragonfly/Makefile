@@ -26,6 +26,8 @@ GAMESRC= \
          GameOver.cpp \
          Hero.cpp \
          Points.cpp \
+		 Enemy.cpp \
+		 Wall.cpp \
 
 GAME= game.cpp
 EXECUTABLE= game		
@@ -34,7 +36,7 @@ OBJECTS= $(GAMESRC:.cpp=.o)
 all: $(EXECUTABLE) Makefile
 
 $(EXECUTABLE): $(ENG) $(OBJECTS) $(GAME) $(GAMESRC) 
-	$(CC) $(GAME) $(OBJECTS) $(ENG) $(PLATFORM) -o $@ -I$(INCPATH) $(LDFLAGS) 
+	$(CC) $(GAME) $(OBJECTS) $(ENG) $(PLATFORM) -o $@ -g -I$(INCPATH) $(LDFLAGS) 
 
 .cpp.o: 
 	$(CC) -c $(DEBUG) -I$(INCPATH) $(PLATFORM) $< -o $@
@@ -57,7 +59,7 @@ Enemy.o: /usr/include/sys/select.h /usr/include/bits/select.h
 Enemy.o: /usr/include/bits/sigset.h /usr/include/bits/time.h
 Enemy.o: /usr/include/sys/sysmacros.h /usr/include/bits/pthreadtypes.h
 Enemy.o: /usr/include/alloca.h Points.h Enemy.h Hero.h
-game.o: GameStart.h Star.h Hero.h Enemy.h
+game.o: GameStart.h Star.h Hero.h Enemy.h Wall.h
 GameOver.o: GameOver.h GameStart.h
 GameStart.o: GameStart.h Hero.h Points.h
 Hero.o: Bullet.h GameOver.h Hero.h
@@ -72,3 +74,13 @@ Star.o: /usr/include/sys/select.h /usr/include/bits/select.h
 Star.o: /usr/include/bits/sigset.h /usr/include/bits/time.h
 Star.o: /usr/include/sys/sysmacros.h /usr/include/bits/pthreadtypes.h
 Star.o: /usr/include/alloca.h Star.h
+Wall.o: /usr/include/stdlib.h /usr/include/features.h
+Wall.o: /usr/include/sys/cdefs.h /usr/include/bits/wordsize.h
+Wall.o: /usr/include/gnu/stubs.h /usr/include/gnu/stubs-64.h
+Wall.o: /usr/include/sys/types.h /usr/include/bits/types.h
+Wall.o: /usr/include/bits/typesizes.h /usr/include/time.h
+Wall.o: /usr/include/endian.h /usr/include/bits/endian.h
+Wall.o: /usr/include/sys/select.h /usr/include/bits/select.h
+Wall.o: /usr/include/bits/sigset.h /usr/include/bits/time.h
+Wall.o: /usr/include/sys/sysmacros.h /usr/include/bits/pthreadtypes.h
+Wall.o: /usr/include/alloca.h Points.h Wall.h Hero.h

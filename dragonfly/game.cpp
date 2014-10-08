@@ -14,6 +14,7 @@
 #include "Star.h"
 #include "Hero.h"
 #include "Enemy.h"
+#include "Wall.h"
 
 // Function prototypes.
 void loadResources(void);
@@ -59,14 +60,17 @@ void loadResources(void) {
   resource_manager.loadSprite("sprites/enemy-spr.txt", "enemy");
   resource_manager.loadSprite("sprites/hero-spr.txt", "hero");
   resource_manager.loadSprite("sprites/invincibility-spr.txt", "invincibility");
+  resource_manager.loadSprite("sprites/wall-spr.txt", "wall");
+  resource_manager.loadSprite("sprites/crouch-spr.txt", "duck");
 }
  
 // Populate world with some objects.
 void populateWorld(void) {
  
 	new Hero;
-	new Enemy;
+	//new Enemy;
+	//new Wall;
 	
   // Create GameStart object.
-	 new GameStart();
+	new GameStart();
 }
