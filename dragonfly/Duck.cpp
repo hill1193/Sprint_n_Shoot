@@ -1,5 +1,5 @@
 //
-// Hero.cpp
+// Duck.cpp
 //
 
 // Engine includes.
@@ -13,27 +13,22 @@
 // Game includes.
 #include "Bullet.h"
 #include "GameOver.h"
-#include "Hero.h"
 #include "Duck.h"
 
-Hero::Hero() {
-
-  // Link to "hero" sprite.
+Duck::Duck() {
+  timer = 25;
+  // Link to "duck" sprite.
   ResourceManager &resource_manager = ResourceManager::getInstance();
   LogManager &log_manager = LogManager::getInstance();
   Sprite *p_temp_sprite;
-  Sprite *duck_sprite;
-  p_temp_sprite = resource_manager.getSprite("hero");
+  p_temp_sprite = resource_manager.getSprite("duck");
   if (!p_temp_sprite) {
-    log_manager.writeLog("Hero::Hero(): Warning! Sprite '%s' not found", "hero");
+    log_manager.writeLog("Duck::Duck(): Warning! Sprite '%s' not found", "duck");
   } else {
     setSprite(p_temp_sprite);
 	setSpriteSlowdown(3);
 	setTransparency();
   }
-
-  // Player controls hero, so register with keyboard.
-  registerInterest(DF_KEYBOARD_EVENT);
 
   // Need to update fire rate control each step.
   registerInterest(DF_STEP_EVENT);
@@ -42,27 +37,24 @@ Hero::Hero() {
   setType("Hero");
   
   // Set object ID.
-  setId(5);
+  setId(6);
 
   // Set starting location.
   WorldManager &world_manager = WorldManager::getInstance();
   Position pos(7, FLOOR_Y);
   setPosition(pos);
- }
 
-Hero::~Hero() {
+  // Set firing variables.
+  fire_countdown = 0;
+}
+
+Duck::~Duck() {
 
 }
 
 // Handle event.
 // Return 0 if ignored, else 1.
-int Hero::eventHandler(Event *p_e) {
-
-  if (p_e->getType() == DF_KEYBOARD_EVENT) {
-    EventKeyboard *p_keyboard_event = static_cast <EventKeyboard *> (p_e);
-    kbd(p_keyboard_event);
-    return 1;
-  }
+int Duck::eventHandler(Event *p_e) {
 
   if (p_e->getType() == DF_STEP_EVENT) {
     step();
@@ -79,65 +71,21 @@ int Hero::eventHandler(Event *p_e) {
   return 0;
 }
 
-// Take appropriate action according to key pressed.
-void Hero::kbd(EventKeyboard *p_keyboard_event) {
-  WorldManager &world_manager = WorldManager::getInstance();
 
-  switch(p_keyboard_event->getKey()) {
-  case KEY_UP:       // up arrow
-    jump();
-    break;
-  case KEY_DOWN:     // down arrow
-    duck();
-    break;
-  case ' ':          // fire
-    fire();
-    break;
-  case 'q':          // quit
-    world_manager.markForDelete(this);
-    break;
-  };
-
-  return;
-}
-
-void Hero::hit(EventCollision *p_c) {
+void Duck::hit(EventCollision *p_c) {
 	if (power == INVINCIBILITY) return;  // Ignore all collisions when invincible
 
 	// If wall or enemy, die
 	// If powerup, set power state and countdown
 }
 
-// Move up or down.
-void Hero::jump() {
-  int timer = 0;
-  WorldManager &world_manager = WorldManager::getInstance();
-  if (getPosition().getY() == FLOOR_Y) { // Have to be on the ground to jump
-	while(timer < 30) {
-		setPosition(Position(getPosition().getX(), FLOOR_Y - 5));
-		timer++;
-		}
-	if(timer == 30)
-		timer = 0;
-	}
-	
-}
-
-// Fire bullet.
-void Hero::fire() {
-  if (fire_countdown > 0)
-    return;
-  if (power != RAPID_FIRE)
-    fire_countdown = FIRE_RATE;
-  else fire_countdown = RAPID_FIRE_RATE;
-  new Bullet(getPosition());
-}
 
 // Decrease fire/power timers and simulate gravity
-void Hero::step() {
+void Duck::step() {
   WorldManager &world_manager = WorldManager::getInstance();
   fire_countdown--;
   power_countdown--;
+  timer--;
   
   if (fire_countdown < 0)
     fire_countdown = 0;
@@ -146,7 +94,7 @@ void Hero::step() {
 	power = NO_POWER;
   }	
   
-   if (this->getPosition().getY() < FLOOR_Y)
+   if (this->getPosition().getY() != FLOOR_Y)
 	setYVelocity(getYVelocity() + GRAVITY);
   else setYVelocity(0);
   
@@ -155,14 +103,10 @@ void Hero::step() {
 		temp_pos.setY(FLOOR_Y);
 		setPosition(temp_pos);
 		}
-}
-
-void Hero::duck() {
-  WorldManager &world_manager = WorldManager::getInstance();
-  if(this->getPosition().getY() == FLOOR_Y) {
+		
+    if(timer == 0) {
     WorldManager &world_manager = WorldManager::getInstance();
     world_manager.markForDelete(this);
-    new Duck;
-	}
+    new Hero;
+  }
 }
-

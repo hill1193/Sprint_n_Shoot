@@ -69,7 +69,7 @@ void populateWorld(void) {
  
 	new Hero;
 	//new Enemy;
-	//new Wall;
+	new Wall;
 	
   // Create GameStart object.
 	new GameStart();
