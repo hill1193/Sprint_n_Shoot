@@ -1,11 +1,17 @@
 #include "Powerup.h"
+#include "ResourceManager.h"
+#include "LogManager.h"
+#include "WorldManager.h"
+#include "Hero.h"
 #include <stdlib.h>
 
 Powerup::Powerup() {
 	ResourceManager &resource_manager = ResourceManager::getInstance();
+	LogManager &log_manager = LogManager::getInstance();
+	
 	Sprite *p_temp_sprite;
 	
-	int power_type = random()%NUMBER_POWER;
+	int power_type = random()%NUMBER_POWERS;
 	
 	if (power_type == 0) {
 		p_temp_sprite = resource_manager.getSprite("invincibility");
@@ -24,17 +30,18 @@ Powerup::Powerup() {
     }
 	
 	setXVelocity(-1);
+	moveToStart();
 }
 
-void Powerup::setPowerup(PowerupType new_power) {
+void Powerup::setPower(PowerupType new_power) {
 	this->power = new_power;
 }
 
-PowerupType Powerup::getPowerup() const {
+PowerupType Powerup::getPower() const {
 	return this->power;
 }
 
-void Wall::moveToStart() {
+void Powerup::moveToStart() {
   WorldManager &world_manager = WorldManager::getInstance();
   Position temp_pos;
 

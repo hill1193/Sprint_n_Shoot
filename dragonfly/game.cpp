@@ -14,6 +14,7 @@
 #include "Star.h"
 #include "Hero.h"
 #include "Enemy.h"
+#include "Powerup.h"
 
 // Function prototypes.
 void loadResources(void);

@@ -28,6 +28,7 @@ GAMESRC= \
          Points.cpp \
 		 Enemy.cpp \
 		 Wall.cpp \
+		 Powerup.cpp \
 
 GAME= game.cpp
 EXECUTABLE= game		
@@ -59,11 +60,21 @@ Enemy.o: /usr/include/sys/select.h /usr/include/bits/select.h
 Enemy.o: /usr/include/bits/sigset.h /usr/include/bits/time.h
 Enemy.o: /usr/include/sys/sysmacros.h /usr/include/bits/pthreadtypes.h
 Enemy.o: /usr/include/alloca.h Points.h Enemy.h Hero.h
-game.o: GameStart.h Star.h Hero.h Enemy.h Wall.h
+game.o: GameStart.h Star.h Hero.h Enemy.h
 GameOver.o: GameOver.h GameStart.h
 GameStart.o: GameStart.h Hero.h Points.h
 Hero.o: Bullet.h GameOver.h Hero.h
 Points.o: Points.h
+Powerup.o: Powerup.h Hero.h /usr/include/stdlib.h /usr/include/features.h
+Powerup.o: /usr/include/sys/cdefs.h /usr/include/bits/wordsize.h
+Powerup.o: /usr/include/gnu/stubs.h /usr/include/gnu/stubs-64.h
+Powerup.o: /usr/include/sys/types.h /usr/include/bits/types.h
+Powerup.o: /usr/include/bits/typesizes.h /usr/include/time.h
+Powerup.o: /usr/include/endian.h /usr/include/bits/endian.h
+Powerup.o: /usr/include/sys/select.h /usr/include/bits/select.h
+Powerup.o: /usr/include/bits/sigset.h /usr/include/bits/time.h
+Powerup.o: /usr/include/sys/sysmacros.h /usr/include/bits/pthreadtypes.h
+Powerup.o: /usr/include/alloca.h
 Star.o: /usr/include/stdlib.h /usr/include/features.h
 Star.o: /usr/include/sys/cdefs.h /usr/include/bits/wordsize.h
 Star.o: /usr/include/gnu/stubs.h /usr/include/gnu/stubs-64.h

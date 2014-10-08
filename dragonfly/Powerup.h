@@ -8,6 +8,6 @@ class Powerup : public Object {
 		void moveToStart();
 	public:
 		Powerup();
-		void setPower(PowerupType new power);
+		void setPower(PowerupType new_power);
 		PowerupType getPower() const;
 };

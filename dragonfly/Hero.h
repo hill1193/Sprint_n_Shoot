@@ -1,6 +1,9 @@
 // Hero.h
 //
 
+#ifndef __HERO_H__
+#define __HERO_H__
+
 #include "EventKeyboard.h"
 #include "Object.h"
 #include "EventCollision.h"
@@ -36,3 +39,5 @@ class Hero : public Object {
   ~Hero();
   int eventHandler(Event *p_e);
 };
+
+#endif
