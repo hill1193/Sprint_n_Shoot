@@ -1,6 +1,9 @@
 // Hero.h
 //
 
+#ifndef __HERO_H__
+#define __HERO_H__
+
 #include "EventKeyboard.h"
 #ifndef __HERO_H__
 #define __HERO_H__
@@ -38,4 +41,8 @@ class Hero : public Object {
   ~Hero();
   int eventHandler(Event *p_e);
 };
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/dev
 #endif
