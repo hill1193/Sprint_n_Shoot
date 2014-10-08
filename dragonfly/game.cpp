@@ -59,6 +59,8 @@ void loadResources(void) {
   resource_manager.loadSprite("sprites/enemy-spr.txt", "enemy");
   resource_manager.loadSprite("sprites/hero-spr.txt", "hero");
   resource_manager.loadSprite("sprites/invincibility-spr.txt", "invincibility");
+  resource_manager.loadSprite("sprites/rapid-fire-spr.txt", "rapid_fire");
+  
 }
  
 // Populate world with some objects.
